@@ -118,3 +118,59 @@ df_posts = pd.DataFrame(collected_posts)
 output_csv = "disaster_posts_3.csv"
 df_posts.to_csv(output_csv, index=False)
 print(f"Saved {len(df_posts)} disaster posts to '{output_csv}'.")
+
+df = pd.read_csv('disaster_posts_1.csv')
+
+# Display basic dataset info to understand its structure
+print("Data Information:")
+print(df.info())
+print("\nData Head Preview:")
+print(df.head())
+
+# Remove any duplicate rows that might exist in the dataset.
+df = df.drop_duplicates()
+
+missing_counts = df.isnull().sum()
+print("\nMissing Values in Each Column:")
+print(missing_counts)
+
+
+# Many disaster post datasets include a text field (e.g. 'text', 'message', or 'content').
+if 'text' in df.columns:
+    # Convert text to string (if not already), lower-case, and remove leading/trailing whitespace.
+    df['text'] = df['text'].astype(str).str.lower().str.strip()
+    
+    # Remove punctuation: You can also customize which punctuation or characters to remove.
+    df['text'] = df['text'].apply(lambda x: x.translate(str.maketrans('', '', string.punctuation)))
+    
+    # Replace any extra spaces with a single space for readability.
+    df['text'] = df['text'].str.replace('\s+', ' ', regex=True)
+
+# If your dataset uses another column name for the main content,
+# repeat similar steps for that column (e.g. 'message' or 'content'):
+if 'message' in df.columns:
+    df['message'] = df['message'].astype(str).str.lower().str.strip()
+    df['message'] = df['message'].apply(lambda x: x.translate(str.maketrans('', '', string.punctuation)))
+    df['message'] = df['message'].str.replace('\s+', ' ', regex=True)
+
+# For numeric columns, one strategy might be to replace missing values with the column mean:
+num_cols = df.select_dtypes(include=['int64', 'float64']).columns
+for col in num_cols:
+    df[col] = df[col].fillna(df[col].mean())
+
+# For categorical or text columns, you might fill missing values with a placeholder:
+cat_cols = df.select_dtypes(include=['object']).columns
+for col in cat_cols:
+    df[col] = df[col].fillna('unknown')
+
+# Recheck missing values after imputation
+print("\nMissing Values After Cleaning:")
+print(df.isnull().sum())
+
+if 'DisasterType' in df.columns:
+    print(df['DisasterType'].value_counts())
+    
+# Save the cleaned dataframe to a new CSV file.
+cleaned_filepath = 'disaster_posts_1_cleaned.csv'
+df.to_csv(cleaned_filepath, index=False)
+print(f"\nData cleaning complete. Cleaned data saved as {cleaned_filepath}")
