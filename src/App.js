@@ -11,6 +11,8 @@ import {
 import MapComponent from './components/MapComponent';
 import TweetSummary from './components/TweetSummary';
 import TweetDetail from './components/TweetDetail';
+import Statistics from './components/Statistics';
+
 
 import './App.css';
 
@@ -27,17 +29,10 @@ function Dashboard({ tweetData }) {
               isActive ? 'nav-item active' : 'nav-item'
             }
           >
-            Overview
-          </NavLink>
-
-          <NavLink
-            to="/alerts"
-            className={({ isActive }) =>
-              isActive ? 'nav-item active' : 'nav-item'
-            }
-          >
             Alerts
           </NavLink>
+
+          {/* removed Alerts link */}
 
           <NavLink
             to="/resources"
@@ -45,7 +40,7 @@ function Dashboard({ tweetData }) {
               isActive ? 'nav-item active' : 'nav-item'
             }
           >
-            Resources
+            Statistics
           </NavLink>
 
           <NavLink
@@ -107,7 +102,7 @@ function App() {
                   </p>
                 </div>
                 {/* location filter */}
-                <div className="filter-container">
+                <div className="filter-container" style={{ marginBottom: '2rem' }}>
   <label>Location:</label>
   <select
     value={locationFilter}
@@ -136,6 +131,7 @@ function App() {
             }
           />
           <Route path="map" element={<MapComponent tweetData={tweetData} />} />
+          <Route path="resources" element={<Statistics />} />
           <Route path="tweet/:id" element={<TweetDetail tweetData={tweetData} />} />
         </Route>
       </Routes>
