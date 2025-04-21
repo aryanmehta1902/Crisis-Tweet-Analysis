@@ -1,28 +1,64 @@
 // src/App.js
-// src/App.js
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  NavLink
+} from 'react-router-dom';
+
 import MapComponent from './components/MapComponent';
 import TweetSummary from './components/TweetSummary';
 import TweetDetail from './components/TweetDetail';
+
 import './App.css';
 
-// Inline Dashboard layout wraps all child routes
-function Dashboard({ tweetData, activeTab, setActiveTab }) {
+function Dashboard({ tweetData }) {
   return (
     <div className="app-container">
-      {/* Sidebar stays consistent across all pages */}
       <aside className="sidebar">
         <h1>Crisis Dashboard</h1>
         <nav>
-          <a href="/" onClick={() => setActiveTab('tweets')}>Overview</a>
-          <a href="/#alerts" onClick={() => setActiveTab('alerts')}>Alerts</a>
-          <a href="/#resources" onClick={() => setActiveTab('resources')}>Resources</a>
-          <a href="/map" onClick={() => setActiveTab('map')}>Map</a>
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              isActive ? 'nav-item active' : 'nav-item'
+            }
+          >
+            Overview
+          </NavLink>
+
+          <NavLink
+            to="/alerts"
+            className={({ isActive }) =>
+              isActive ? 'nav-item active' : 'nav-item'
+            }
+          >
+            Alerts
+          </NavLink>
+
+          <NavLink
+            to="/resources"
+            className={({ isActive }) =>
+              isActive ? 'nav-item active' : 'nav-item'
+            }
+          >
+            Resources
+          </NavLink>
+
+          <NavLink
+            to="/map"
+            className={({ isActive }) =>
+              isActive ? 'nav-item active' : 'nav-item'
+            }
+          >
+            Map
+          </NavLink>
         </nav>
       </aside>
 
-      {/* Main Content renders whichever child route is active */}
       <main className="main-content">
         <Outlet />
       </main>
@@ -49,23 +85,17 @@ function App() {
     { id: 15, author: "CommunityWatch", text: "Minor earthquake reported in Nevada.", timestamp: "2025-02-20 04:30 PM", state: "Nevada", city: "Las Vegas" }
   ];
 
-  const [activeTab, setActiveTab] = useState("overview");
+  // location filter state
+  const [locationFilter, setLocationFilter] = useState("");
+  // derive unique locations
+  const locations = Array.from(
+    new Set(tweetData.map(t => t.state))
+  ).sort();
 
   return (
     <Router>
       <Routes>
-        {/* Dashboard wraps these child routes for consistent layout */}
-        <Route
-          path="/"
-          element={
-            <Dashboard
-              tweetData={tweetData}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
-          }
-        >
-          {/* SUMMARY view at "/" */}
+        <Route path="/" element={<Dashboard tweetData={tweetData} />}>
           <Route
             index
             element={
@@ -76,22 +106,37 @@ function App() {
                     Live Updates Relevant To First Responders
                   </p>
                 </div>
-                <TweetSummary tweetData={tweetData} />
+                {/* location filter */}
+                <div className="filter-container">
+  <label>Location:</label>
+  <select
+    value={locationFilter}
+    onChange={e => setLocationFilter(e.target.value)}
+  >
+    <option value="">All</option>
+    {locations.map(loc => (
+      <option key={loc} value={loc}>{loc}</option>
+    ))}
+  </select>
+  {/* back / clear button */}
+  <button
+    className="clear-filter"
+    onClick={() => setLocationFilter("")}
+    style={{ marginLeft: '1rem', padding: '0.3rem 0.6rem' }}
+  >
+    Clear
+  </button>
+</div>
+                <TweetSummary
+                  tweetData={tweetData.filter(
+                    t => !locationFilter || t.state === locationFilter
+                  )}
+                />
               </>
             }
           />
-
-          {/* Map view at "/map" */}
-          <Route
-            path="map"
-            element={<MapComponent tweetData={tweetData} />}
-          />
-
-          {/* Detail view at "/tweet/:id" */}
-          <Route
-            path="tweet/:id"
-            element={<TweetDetail tweetData={tweetData} />}
-          />
+          <Route path="map" element={<MapComponent tweetData={tweetData} />} />
+          <Route path="tweet/:id" element={<TweetDetail tweetData={tweetData} />} />
         </Route>
       </Routes>
     </Router>
