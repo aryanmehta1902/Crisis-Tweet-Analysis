@@ -6,11 +6,11 @@ import L from "leaflet";
 
 // Custom tweet icon
 const tweetIcon = new L.Icon({
-  iconUrl: "/icons/twitter-logo.png", // make sure this path is correct relative to public
-  iconSize: [32, 32], // adjust to your preferred size
-  iconAnchor: [16, 32], // position relative to the point on the map
-  popupAnchor: [0, -32], // position of popup relative to icon
-  className: "tweet-icon"
+  iconUrl: "/icons/Map_Pinpoint.png",
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+  className: "tweet-icon",
 });
 
 const cityCoordinates = {
@@ -19,12 +19,15 @@ const cityCoordinates = {
   "Houston": [29.7604, -95.3698],
   "Miami": [25.7617, -80.1918],
   "Chicago": [41.8781, -87.6298],
-  "Oklahoma City": [35.4676, -97.5164]
+  "Oklahoma City": [35.4676, -97.5164],
 };
+
+const disasterTypes = ["All", "Fire", "Flood", "Hurricane", "Earthquake", "Tornado"];
 
 const MapComponent = ({ tweetData }) => {
   const [geoJsonData, setGeoJsonData] = useState(null);
   const [tweetCounts, setTweetCounts] = useState({});
+  const [selectedDisaster, setSelectedDisaster] = useState("All");
 
   useEffect(() => {
     fetch("/data/states.geojson")
@@ -64,8 +67,32 @@ const MapComponent = ({ tweetData }) => {
     });
   };
 
+  const filteredTweets = tweetData.filter(tweet => {
+    return selectedDisaster === "All" || tweet.type === selectedDisaster;
+  });
+
   return (
     <div style={{ width: "100%", height: "calc(100vh - 80px)" }}>
+      {/* Disaster type filter */}
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "10px" }}>
+        {disasterTypes.map((type) => (
+          <button
+            key={type}
+            onClick={() => setSelectedDisaster(type)}
+            style={{
+              padding: "8px 16px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+              backgroundColor: selectedDisaster === type ? "#1976D2" : "#E3F2FD",
+              color: selectedDisaster === type ? "white" : "black",
+              cursor: "pointer"
+            }}
+          >
+            {type}
+          </button>
+        ))}
+      </div>
+
       <MapContainer center={[37.8, -96]} zoom={4} style={{ width: "100%", height: "100%" }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -74,7 +101,7 @@ const MapComponent = ({ tweetData }) => {
         {geoJsonData && (
           <GeoJSON data={geoJsonData} style={stateStyle} onEachFeature={onEachFeature} />
         )}
-        {tweetData.map((tweet) => {
+        {filteredTweets.map((tweet) => {
           const position = cityCoordinates[tweet.city];
           if (!position) return null;
           return (
