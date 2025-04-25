@@ -1,29 +1,32 @@
 /* src/App.css */
 
-/* 1) Define color variables in :root */
+/* 1) Define color variables */
 :root {
-  --brand-lightest: #DEE1DD;
-  --brand-lighter:  #C4CDC1;
-  --brand-light:    #99AEAD;
-  --brand-muted:    #6D9197;
-  --brand-accent:   #658B6F;
-  --brand-dark:     #2F575D;
-  --brand-darkest:  #28363D;
+  --brand-lightest: #f0f7fa;
+  --brand-lighter:  #dcefe6;
+  --brand-light:    #a0cfc0;
+  --brand-muted:    #6d9197;
+  --brand-accent:   #658b6f;
+  --brand-dark:     #2f575d;
+  --brand-darkest:  #1e3d59;
 }
 
-/* 2) Reset or normalize if desired */
+/* 2) Reset and base font */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif; /* Or any preferred font */
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
 }
 
-/* 3) Main container */
+/* 3) Fountain image background for app */
 .app-container {
   display: flex;
-  min-height: 100vh; 
-  background-color: var(--brand-lightest);
+  min-height: 100vh;
+  background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1950&q=80');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* 4) Sidebar */
@@ -31,12 +34,13 @@
   width: 250px;
   background-color: var(--brand-darkest);
   color: #ffffff;
-  padding: 1rem;
+  padding: 2rem 1.5rem;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar h1 {
+  font-size: 1.8rem;
   margin-bottom: 2rem;
-  font-size: 1.5rem;
   font-weight: bold;
 }
 
@@ -44,40 +48,53 @@
   display: block;
   color: var(--brand-light);
   text-decoration: none;
-  margin-bottom: 1rem;
-  transition: color 0.3s;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+  transition: all 0.3s ease;
 }
 
 .sidebar a:hover {
   color: var(--brand-accent);
+  transform: translateX(4px);
+}
+
+.nav-item.active {
+  color: #ffffff;
+  font-weight: bold;
 }
 
 /* 5) Main content */
 .main-content {
   flex: 1;
-  padding: 1rem 2rem;
+  padding: 2rem;
   overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  margin: 2rem;
 }
 
+/* 6) Header styles */
 .main-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .main-header h2 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: var(--brand-dark);
 }
 
 .main-header p {
   color: var(--brand-muted);
   margin-top: 0.25rem;
+  font-size: 1.1rem;
 }
 
-/* 6) Tweet cards layout */
+/* 7) Tweet grid layout */
 .tweet-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 @media (min-width: 768px) {
@@ -92,61 +109,77 @@
   }
 }
 
-/* 7) Individual tweet card */
+/* 8) Tweet card */
 .tweet-card {
-  background-color: #ffffff;
-  border-radius: 4px;
-  padding: 1rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+  transition: transform 0.3s ease;
+}
+
+.tweet-card:hover {
+  transform: translateY(-4px);
 }
 
 .tweet-card h3 {
   font-weight: bold;
   color: var(--brand-darkest);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .tweet-card .timestamp {
   font-size: 0.875rem;
   color: var(--brand-muted);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .tweet-card .text {
   color: var(--brand-darkest);
-  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .tweet-card .location {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: var(--brand-dark);
+  font-weight: 500;
 }
 
-.nav-item {
-  color: var(--brand-light);
-  /* …other styles… */
-}
-.nav-item.active {
-  color: #ffffff;
-}
-
+/* 9) Filter area */
 .filter-container {
   display: flex;
   align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
 .filter-container label {
   color: var(--brand-darkest);
+  font-weight: 500;
 }
 
 .filter-container select {
-  padding: 0.3rem;
-  border-radius: 4px;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
   border: 1px solid var(--brand-muted);
+  font-size: 1rem;
+  background-color: white;
+  color: var(--brand-darkest);
 }
 
-/* give space under the location filter before the tweet cards */
-.filter-container {
-  margin-bottom: 2rem;
+.filter-container .clear-filter {
+  background-color: var(--brand-accent);
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  color: white;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.3s ease;
 }
 
+.filter-container .clear-filter:hover {
+  background-color: var(--brand-dark);
+}

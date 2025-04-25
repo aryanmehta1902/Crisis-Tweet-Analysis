@@ -1,5 +1,7 @@
 // src/App.js
 import React, { useState } from 'react';
+import Welcome from './components/Welcome'; // Adjust path if needed
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -21,33 +23,34 @@ function Dashboard({ tweetData }) {
       <aside className="sidebar">
         <h1>Crisis Dashboard</h1>
         <nav>
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              isActive ? 'nav-item active' : 'nav-item'
-            }
-          >
-            Alerts
-          </NavLink>
+        <NavLink
+  to="/dashboard"
+  end
+  className={({ isActive }) =>
+    isActive ? 'nav-item active' : 'nav-item'
+  }
+>
+  Alerts
+</NavLink>
 
-          <NavLink
-            to="/resources"
-            className={({ isActive }) =>
-              isActive ? 'nav-item active' : 'nav-item'
-            }
-          >
-            Statistics
-          </NavLink>
+<NavLink
+  to="/dashboard/resources"
+  className={({ isActive }) =>
+    isActive ? 'nav-item active' : 'nav-item'
+  }
+>
+  Statistics
+</NavLink>
 
-          <NavLink
-            to="/map"
-            className={({ isActive }) =>
-              isActive ? 'nav-item active' : 'nav-item'
-            }
-          >
-            Map
-          </NavLink>
+<NavLink
+  to="/dashboard/map"
+  className={({ isActive }) =>
+    isActive ? 'nav-item active' : 'nav-item'
+  }
+>
+  Map
+</NavLink>
+
         </nav>
       </aside>
 
@@ -84,51 +87,56 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard tweetData={tweetData} />}>
-          <Route
-            index
-            element={
-              <>
-                <div className="page-header">
-                  <h1>Live Tweets</h1>
-                  <p className="page-subtitle">
-                    Live Updates Relevant To First Responders
-                  </p>
-                </div>
-                <div className="filter-container" style={{ marginBottom: '2rem' }}>
-                  <label>Location:</label>
-                  <select
-                    value={locationFilter}
-                    onChange={e => setLocationFilter(e.target.value)}
-                  >
-                    <option value="">All</option>
-                    {locations.map(loc => (
-                      <option key={loc} value={loc}>{loc}</option>
-                    ))}
-                  </select>
-                  <button
-                    className="clear-filter"
-                    onClick={() => setLocationFilter("")}
-                    style={{ marginLeft: '1rem', padding: '0.3rem 0.6rem' }}
-                  >
-                    Clear
-                  </button>
-                </div>
-                <TweetSummary
-                  tweetData={tweetData.filter(
-                    t => !locationFilter || t.state === locationFilter
-                  )}
-                />
-              </>
-            }
-          />
-          <Route path="map" element={<MapComponent tweetData={tweetData} />} />
-          <Route path="resources" element={<Statistics />} />
-          <Route path="tweet/:id" element={<TweetDetail tweetData={tweetData} />} />
-        </Route>
-      </Routes>
-    </Router>
+    <Routes>
+      {/* Landing Page Route */}
+      <Route path="/" element={<Welcome />} />
+  
+      {/* Main Dashboard Route */}
+      <Route path="/dashboard" element={<Dashboard tweetData={tweetData} />}>
+        <Route
+          index
+          element={
+            <>
+              <div className="page-header">
+                <h1>Live Tweets</h1>
+                <p className="page-subtitle">
+                  Live Updates Relevant To First Responders
+                </p>
+              </div>
+              <div className="filter-container" style={{ marginBottom: '2rem' }}>
+                <label>Location:</label>
+                <select
+                  value={locationFilter}
+                  onChange={e => setLocationFilter(e.target.value)}
+                >
+                  <option value="">All</option>
+                  {locations.map(loc => (
+                    <option key={loc} value={loc}>{loc}</option>
+                  ))}
+                </select>
+                <button
+                  className="clear-filter"
+                  onClick={() => setLocationFilter("")}
+                  style={{ marginLeft: '1rem', padding: '0.3rem 0.6rem' }}
+                >
+                  Clear
+                </button>
+              </div>
+              <TweetSummary
+                tweetData={tweetData.filter(
+                  t => !locationFilter || t.state === locationFilter
+                )}
+              />
+            </>
+          }
+        />
+        <Route path="map" element={<MapComponent tweetData={tweetData} />} />
+        <Route path="resources" element={<Statistics />} />
+        <Route path="tweet/:id" element={<TweetDetail tweetData={tweetData} />} />
+      </Route>
+    </Routes>
+  </Router>
+  
   );
 }
 
