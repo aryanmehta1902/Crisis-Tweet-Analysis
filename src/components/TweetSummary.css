@@ -1,0 +1,18 @@
+/* TweetSummary.css */
+
+/* Page header container */
+.page-header {
+    margin-bottom: 3rem;  /* space below header container */
+  }
+  
+  /* Title vs subtitle spacing */
+  .page-header h1 {
+    margin-bottom: 0.5rem;
+    color: #28363D;
+  }
+  
+  .page-subtitle {
+    margin-bottom: 2rem;
+    color: #28363D;
+  }
+  

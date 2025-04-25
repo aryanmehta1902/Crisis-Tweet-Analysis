@@ -1,0 +1,61 @@
+// src/components/MapComponent.js
+import React from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix for missing marker images
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Set default icon
+const defaultIcon = new L.Icon({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41], // Default size
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+// Example location coordinates
+const locationToCoords = {
+  "Main Street": [40.7128, -74.0060],
+  "Community Center": [40.73061, -73.935242],
+  "Highway 5": [40.758896, -73.985130],
+  "Downtown": [40.7163, -74.0086],
+  "Northern District": [40.7527, -73.9772],
+  "Elm Street": [40.7411, -73.9897],
+  "Western Suburbs": [40.7655, -73.9942],
+  "Riverside": [40.7053, -74.0132],
+  "City Park": [40.7484, -73.9857],
+  "Residential Area": [40.7306, -73.9352]
+};
+
+const MapComponent = ({ tweetData }) => {
+  return (
+    <div style={{ width: '100%', height: 'calc(100vh - 80px)' }}>
+      <MapContainer center={[40.73061, -73.935242]} zoom={12} style={{ width: '100%', height: '100%' }}>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution="© OpenStreetMap contributors"
+        />
+        {tweetData.map((tweet) => {
+          const coords = locationToCoords[tweet.location] || [40.73061, -73.935242]; // Default to a central location
+          return (
+            <Marker key={tweet.id} position={coords} icon={defaultIcon}>
+              <Popup>
+                <strong>{tweet.author}</strong> <br />
+                {tweet.text} <br />
+                {tweet.timestamp} <br />
+                <em>{tweet.location}</em>
+              </Popup>
+            </Marker>
+          );
+        })}
+      </MapContainer>
+    </div>
+  );
+};
+
+export default MapComponent;

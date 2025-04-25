@@ -1,155 +1,143 @@
 // src/App.js
-import React from 'react';
+import React, { useState } from 'react';
+import Welcome from './components/Welcome'; // Adjust path if needed
+
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  NavLink
+} from 'react-router-dom';
+
+import MapComponent from './components/MapComponent';
+import TweetSummary from './components/TweetSummary';
+import TweetDetail from './components/TweetDetail';
+import Statistics from './components/Statistics';
+
 import './App.css';
 
-function App() {
-  // Example tweet data (replace with real data from your backend / Twitter API)
-  const tweetData = [
-    {
-      id: 1,
-      author: 'User123',
-      text: 'Large fire reported near Main Street. Fire department is on the way!',
-      location: 'Main Street',
-      timestamp: '2025-02-20 10:30 AM'
-    },
-    {
-      id: 2,
-      author: 'FirstResponderTeam',
-      text: 'We have set up an emergency shelter at the Community Center.',
-      location: 'Community Center',
-      timestamp: '2025-02-20 10:45 AM'
-    },
-    {
-      id: 3,
-      author: 'LocalNews',
-      text: 'Traffic jam on Highway 5 due to flooding. Avoid if possible.',
-      location: 'Highway 5',
-      timestamp: '2025-02-20 11:00 AM'
-    },
-    {
-      id: 4,
-      author: 'EmergencyAlert',
-      text: 'Flash flood warning in the downtown area. Seek higher ground immediately.',
-      location: 'Downtown',
-      timestamp: '2025-02-20 12:15 PM'
-    },
-    {
-      id: 5,
-      author: 'CityHall',
-      text: 'Power outage in the northern district. Crews are working to restore electricity.',
-      location: 'Northern District',
-      timestamp: '2025-02-20 12:30 PM'
-    },
-    {
-      id: 6,
-      author: 'CitizenAid',
-      text: 'Volunteers needed at the community center to help distribute supplies.',
-      location: 'Community Center',
-      timestamp: '2025-02-20 01:00 PM'
-    },
-    {
-      id: 7,
-      author: 'TrafficUpdate',
-      text: 'Road closure on Elm Street due to fallen tree. Use alternative routes.',
-      location: 'Elm Street',
-      timestamp: '2025-02-20 01:15 PM'
-    },
-    {
-      id: 8,
-      author: 'WeatherWatch',
-      text: 'Severe thunderstorm approaching from the west. Expect strong winds and hail.',
-      location: 'Western Suburbs',
-      timestamp: '2025-02-20 01:45 PM'
-    },
-    {
-      id: 9,
-      author: 'LocalShelter',
-      text: 'Overnight shelter capacity is reaching limits. Please call ahead if possible.',
-      location: 'Main Shelter',
-      timestamp: '2025-02-20 02:00 PM'
-    },
-    {
-      id: 10,
-      author: 'FireDept',
-      text: 'Multiple reports of smoke near the industrial area. Investigation in progress.',
-      location: 'Industrial Area',
-      timestamp: '2025-02-20 02:15 PM'
-    },
-    {
-      id: 11,
-      author: 'MedicalTeam',
-      text: 'Ambulance delayed on route 66 due to heavy traffic. Use alternate access if needed.',
-      location: 'Route 66',
-      timestamp: '2025-02-20 02:30 PM'
-    },
-    {
-      id: 12,
-      author: 'WaterRescue',
-      text: 'Water levels rising at Riverside. Rescue teams are on standby for emergencies.',
-      location: 'Riverside',
-      timestamp: '2025-02-20 02:45 PM'
-    },
-    {
-      id: 13,
-      author: 'LocalGov',
-      text: 'Curfew imposed in the downtown area for public safety. Please avoid non-essential travel.',
-      location: 'Downtown',
-      timestamp: '2025-02-20 03:00 PM'
-    },
-    {
-      id: 14,
-      author: 'VolunteerCoord',
-      text: 'Emergency volunteers needed for food distribution at City Park. Sign up if available.',
-      location: 'City Park',
-      timestamp: '2025-02-20 03:15 PM'
-    },
-    {
-      id: 15,
-      author: 'SafetyFirst',
-      text: 'Reminder: Do not use open flames in residential areas due to strong winds and fire risks.',
-      location: 'Residential Area',
-      timestamp: '2025-02-20 03:30 PM'
-    }
-  ];
-
+function Dashboard({ tweetData }) {
   return (
     <div className="app-container">
-      {/* Sidebar */}
       <aside className="sidebar">
         <h1>Crisis Dashboard</h1>
         <nav>
-          <a href="#overview">Overview</a>
-          <a href="#alerts">Alerts</a>
-          <a href="#resources">Resources</a>
+        <NavLink
+  to="/dashboard"
+  end
+  className={({ isActive }) =>
+    isActive ? 'nav-item active' : 'nav-item'
+  }
+>
+  Alerts
+</NavLink>
+
+<NavLink
+  to="/dashboard/resources"
+  className={({ isActive }) =>
+    isActive ? 'nav-item active' : 'nav-item'
+  }
+>
+  Statistics
+</NavLink>
+
+<NavLink
+  to="/dashboard/map"
+  className={({ isActive }) =>
+    isActive ? 'nav-item active' : 'nav-item'
+  }
+>
+  Map
+</NavLink>
+
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className="main-content">
-        <header className="main-header">
-          <h2>Tweet Summary</h2>
-          <p>Live updates relevant to first responders</p>
-        </header>
-
-        {/* Tweet Cards */}
-        <section className="tweet-grid">
-          {tweetData.map((tweet) => (
-            <article key={tweet.id} className="tweet-card">
-              <h3>{tweet.author}</h3>
-              <p className="timestamp">{tweet.timestamp}</p>
-              <p className="text">{tweet.text}</p>
-              <p className="location">
-                <strong>Location:</strong> {tweet.location}
-              </p>
-            </article>
-          ))}
-        </section>
+        <Outlet />
       </main>
     </div>
   );
 }
 
+function App() {
+  const tweetData = [
+    { id: 1, author: "User123", text: "Fire reported!", timestamp: "2025-02-20 10:30 AM", state: "California", city: "Los Angeles", type: "Fire" },
+    { id: 2, author: "FirstResponderTeam", text: "Shelter in place!", timestamp: "2025-02-20 10:45 AM", state: "New York", city: "New York City", type: "Hurricane" },
+    { id: 3, author: "LocalNews", text: "Flooding in Texas.", timestamp: "2025-02-20 11:00 AM", state: "Texas", city: "Houston", type: "Flood" },
+    { id: 4, author: "CitizenAid", text: "Need volunteers in Florida.", timestamp: "2025-02-20 12:15 PM", state: "Florida", city: "Miami", type: "Hurricane" },
+    { id: 5, author: "WeatherWatch", text: "Severe storm warning in Illinois.", timestamp: "2025-02-20 12:30 PM", state: "Illinois", city: "Chicago", type: "Tornado" },
+    { id: 6, author: "DisasterReliefOrg", text: "Tornado damage reported in Oklahoma.", timestamp: "2025-02-20 01:00 PM", state: "Oklahoma", city: "Oklahoma City", type: "Tornado" },
+    { id: 7, author: "NewsFlash", text: "Heavy rain in Seattle!", timestamp: "2025-02-20 01:30 PM", state: "Washington", city: "Seattle", type: "Flood" },
+    { id: 8, author: "SafeHome", text: "Snowstorm expected tonight.", timestamp: "2025-02-20 02:00 PM", state: "Colorado", city: "Denver", type: "Hurricane" },
+    { id: 9, author: "CityAlert", text: "Power outage in Miami.", timestamp: "2025-02-20 02:15 PM", state: "Florida", city: "Miami", type: "Hurricane" },
+    { id: 10, author: "WeatherNow", text: "Hot temperatures in Arizona.", timestamp: "2025-02-20 02:30 PM", state: "Arizona", city: "Phoenix", type: "Fire" },
+    { id: 11, author: "EmergencyInfo", text: "Road closures due to landslides.", timestamp: "2025-02-20 03:00 PM", state: "California", city: "San Francisco", type: "Flood" },
+    { id: 12, author: "AlertZone", text: "Wildfires near Portland.", timestamp: "2025-02-20 03:30 PM", state: "Oregon", city: "Portland", type: "Fire" },
+    { id: 13, author: "SafetyUpdate", text: "Bridge collapse, avoid downtown area.", timestamp: "2025-02-20 04:00 PM", state: "New Jersey", city: "Newark", type: "Flood" },
+    { id: 14, author: "LocalRescue", text: "Evacuation in progress in Detroit.", timestamp: "2025-02-20 04:15 PM", state: "Michigan", city: "Detroit", type: "Earthquake" },
+    { id: 15, author: "CommunityWatch", text: "Minor earthquake reported in Nevada.", timestamp: "2025-02-20 04:30 PM", state: "Nevada", city: "Las Vegas", type: "Earthquake" }
+  ];
+
+  const [locationFilter, setLocationFilter] = useState("");
+  const locations = Array.from(
+    new Set(tweetData.map(t => t.state))
+  ).sort();
+
+  return (
+    <Router>
+    <Routes>
+      {/* Landing Page Route */}
+      <Route path="/" element={<Welcome />} />
+  
+      {/* Main Dashboard Route */}
+      <Route path="/dashboard" element={<Dashboard tweetData={tweetData} />}>
+        <Route
+          index
+          element={
+            <>
+              <div className="page-header">
+                <h1>Live Tweets</h1>
+                <p className="page-subtitle">
+                  Live Updates Relevant To First Responders
+                </p>
+              </div>
+              <div className="filter-container" style={{ marginBottom: '2rem' }}>
+                <label>Location:</label>
+                <select
+                  value={locationFilter}
+                  onChange={e => setLocationFilter(e.target.value)}
+                >
+                  <option value="">All</option>
+                  {locations.map(loc => (
+                    <option key={loc} value={loc}>{loc}</option>
+                  ))}
+                </select>
+                <button
+                  className="clear-filter"
+                  onClick={() => setLocationFilter("")}
+                  style={{ marginLeft: '1rem', padding: '0.3rem 0.6rem' }}
+                >
+                  Clear
+                </button>
+              </div>
+              <TweetSummary
+                tweetData={tweetData.filter(
+                  t => !locationFilter || t.state === locationFilter
+                )}
+              />
+            </>
+          }
+        />
+        <Route path="map" element={<MapComponent tweetData={tweetData} />} />
+        <Route path="resources" element={<Statistics />} />
+        <Route path="tweet/:id" element={<TweetDetail tweetData={tweetData} />} />
+      </Route>
+    </Routes>
+  </Router>
+  
+  );
+}
+
 export default App;
-
-
-
