@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model Data_Table {
+  ID           Int     @id @default(autoincrement())
+  DisasterType String?
+  Location     String?
+  Post         String?
+  Sentiment    String?
+  UserID       String?
+}
+
+model posts {
+  uri        String  @id @db.VarChar
+  text       String? @db.VarChar
+  author     String? @db.VarChar
+  created_at String? @db.VarChar
+}
+
+model Crisis_tracker {
+  id Int @id @default(autoincrement())
+
+  @@map("Crisis-tracker")
+}
