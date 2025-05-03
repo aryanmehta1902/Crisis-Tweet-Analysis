@@ -27,7 +27,7 @@ export default function Welcome() {
         backdropFilter: 'blur(6px)' // for subtle glass effect
       }}>
         <h1 style={{ color: '#00796b', fontSize: '2.5rem' }}>
-          Welcome to the Crisis Dashboard
+          Sentry
         </h1>
         <p style={{ marginTop: '1rem', fontSize: '1.1rem', color: '#333' }}>
           This dashboard helps you see and understand emergencies like floods, fires, or earthquakes as they happen. It uses live social media posts and checks them with official data to show where events are happening and how people are reacting. It’s built to help responders and the public get clear, fast information they can trust.
