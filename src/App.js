@@ -21,7 +21,7 @@ function Dashboard({ tweetData }) {
   return (
     <div className="app-container">
       <aside className="sidebar">
-        <h1>Crisis Dashboard</h1>
+        <h1>Sentry</h1>
         <nav>
         <NavLink
   to="/dashboard"
