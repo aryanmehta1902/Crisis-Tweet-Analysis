@@ -85,7 +85,7 @@ function App() {
   const [activeTab, setActiveTab] = useState("overview");
     
     useEffect(() => {
-      axios.get('http://localhost:8080/search')
+      axios.get('https://backend-lhwi.onrender.com/search')
         .then(res => {
           setTweetData(res.data); // res.data is your actual tweet array
           console.log(res.data);
